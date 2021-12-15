@@ -15,6 +15,12 @@ package utils
 
 import "time"
 
+const (
+	MinuteSecond = 60
+	HourSecond   = MinuteSecond * 60
+	DaySecond    = HourSecond * 24
+)
+
 // ***********************************************************************************************
 // * SUMMARY:
 // * WARNING: input params is timestamp.
