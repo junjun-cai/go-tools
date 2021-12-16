@@ -109,18 +109,26 @@ func TestAesCBCDecrypt(t *testing.T) {
 	}
 }
 
-//go test -bench=BenchmarkAesCBCEncrypt --benchmem
+//$ go test -bench=BenchmarkAesCBCEncrypt --benchmem --count=3
+//goos: windows
+//goarch: amd64
 //cpu: Intel(R) Core(TM) i5-10400 CPU @ 2.90GHz
-//BenchmarkAesCBCEncrypt-12        2215071               537.2 ns/op           752 B/op         10 allocs/op
+//BenchmarkAesCBCEncrypt-12        2173509               531.7 ns/op           752 B/op         10 allocs/op
+//BenchmarkAesCBCEncrypt-12        2234392               531.2 ns/op           752 B/op         10 allocs/op
+//BenchmarkAesCBCEncrypt-12        2227069               536.7 ns/op           752 B/op         10 allocs/op
 func BenchmarkAesCBCEncrypt(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		_, _ = AesCBCEncrypt(AesCBCTests[0].in, AesCBCTests[0].key, AesCBCTests[0].key[:aes.BlockSize], AesCBCTests[0].pad)
 	}
 }
 
-//go test -bench=BenchmarkAesCBCDecrypt --benchmem
+//$ go test -bench=BenchmarkAesCBCDecrypt --benchmem --count=3
+//goos: windows
+//goarch: amd64
 //cpu: Intel(R) Core(TM) i5-10400 CPU @ 2.90GHz
-//BenchmarkAesCBCDecrypt-12        2575945               435.8 ns/op           624 B/op          8 allocs/op
+//BenchmarkAesCBCDecrypt-12        2737118               433.9 ns/op           624 B/op          8 allocs/op
+//BenchmarkAesCBCDecrypt-12        2784050               431.0 ns/op           624 B/op          8 allocs/op
+//BenchmarkAesCBCDecrypt-12        2774395               434.3 ns/op           624 B/op          8 allocs/op
 func BenchmarkAesCBCDecrypt(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		_, _ = AesCBCDecrypt(AesCBCTests[0].out, AesCBCTests[0].key, AesCBCTests[0].key[:aes.BlockSize], AesCBCTests[0].pad)
