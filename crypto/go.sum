@@ -1,2 +1,2 @@
-github.com/junjun-cai/go-tools/utils v0.0.0-20211215030359-a4b8ab139edf h1:pA67Je7+MdrWutUkCgsxa1CVBrpIW+EPd66W2FwUEVU=
-github.com/junjun-cai/go-tools/utils v0.0.0-20211215030359-a4b8ab139edf/go.mod h1:N2y+PtOMM2Wi2fRkfGGWoV2pvHDr3JTMXgr8jMGHoO0=
+github.com/pkg/errors v0.9.1 h1:FEBLx1zS214owpjy7qsBeixbURkuhQAwrK5UwLGTwt4=
+github.com/pkg/errors v0.9.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=

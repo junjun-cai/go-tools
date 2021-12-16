@@ -39,6 +39,7 @@ var AesCBCTests = []struct {
 	key  []byte
 	in   []byte
 	out  []byte
+	pad  PaddingT
 }{
 	{
 		"CBC-AES128",
@@ -50,6 +51,7 @@ var AesCBCTests = []struct {
 			0x0e, 0xa5, 0x81, 0xd7, 0xb8, 0xaf, 0xb6, 0xac, 0x11, 0x8e, 0x9b, 0xbb, 0x4d,
 			0xe1, 0x69, 0x9e, 0x13, 0x90, 0x97, 0x42, 0xae, 0xab, 0x0d, 0x16, 0x4f, 0xfa,
 			0x32, 0x4b, 0x0c, 0x1d, 0xd3, 0x37, 0x81, 0x01, 0x6a, 0xb3, 0x09, 0x2a},
+		PKCS7_PADDING,
 	},
 	{
 		"CBC-AES192",
@@ -61,6 +63,7 @@ var AesCBCTests = []struct {
 			0x9a, 0x9f, 0xfc, 0x44, 0x46, 0xb1, 0x2b, 0x51, 0xff, 0xeb, 0x2f, 0xde, 0x0a,
 			0x2c, 0x09, 0xe2, 0xcb, 0xed, 0x01, 0x89, 0x18, 0x43, 0x9b, 0x8b, 0x0e, 0xc0,
 			0xb9, 0x8d, 0x84, 0x4c, 0x56, 0xc3, 0x22, 0x77, 0x90, 0x5e, 0xaf, 0x01},
+		PKCS7_PADDING,
 	},
 	{
 		"CBC-AES256",
@@ -72,12 +75,13 @@ var AesCBCTests = []struct {
 			0x0f, 0xf3, 0x5a, 0x41, 0x3b, 0x93, 0x5c, 0xbc, 0xcc, 0x09, 0xbd, 0xd8, 0x9a,
 			0x1a, 0x0c, 0xe0, 0xda, 0xc7, 0x4c, 0x8d, 0x6c, 0x08, 0x98, 0x57, 0x64, 0xbd,
 			0xf2, 0x87, 0xa9, 0xb0, 0x0a, 0x5a, 0x7c, 0x73, 0xa9, 0x15, 0x55, 0xd4},
+		PKCS7_PADDING,
 	},
 }
 
 func TestAesCBCEncrypt(t *testing.T) {
 	for _, test := range AesCBCTests {
-		data, err := AesCBCEncrypt(test.in, test.key, test.key[:aes.BlockSize])
+		data, err := AesCBCEncrypt(test.in, test.key, test.key[:aes.BlockSize], test.pad)
 		if err != nil {
 			t.Errorf("%s AesCBCEncrypt failed,err:%+v", test.name, err)
 			continue
@@ -92,7 +96,7 @@ func TestAesCBCEncrypt(t *testing.T) {
 
 func TestAesCBCDecrypt(t *testing.T) {
 	for _, test := range AesCBCTests {
-		data, err := AesCBCDecrypt(test.out, test.key, test.key[:aes.BlockSize])
+		data, err := AesCBCDecrypt(test.out, test.key, test.key[:aes.BlockSize], test.pad)
 		if err != nil {
 			t.Errorf("%s AesCBCDecrypt failed,err:%+v", test.name, err)
 			continue
@@ -110,7 +114,7 @@ func TestAesCBCDecrypt(t *testing.T) {
 //BenchmarkAesCBCEncrypt-12        2215071               537.2 ns/op           752 B/op         10 allocs/op
 func BenchmarkAesCBCEncrypt(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		_, _ = AesCBCEncrypt(AesCBCTests[0].in, AesCBCTests[0].key, AesCBCTests[0].key[:aes.BlockSize])
+		_, _ = AesCBCEncrypt(AesCBCTests[0].in, AesCBCTests[0].key, AesCBCTests[0].key[:aes.BlockSize], AesCBCTests[0].pad)
 	}
 }
 
@@ -119,6 +123,6 @@ func BenchmarkAesCBCEncrypt(b *testing.B) {
 //BenchmarkAesCBCDecrypt-12        2575945               435.8 ns/op           624 B/op          8 allocs/op
 func BenchmarkAesCBCDecrypt(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		_, _ = AesCBCDecrypt(AesCBCTests[0].out, AesCBCTests[0].key, AesCBCTests[0].key[:aes.BlockSize])
+		_, _ = AesCBCDecrypt(AesCBCTests[0].out, AesCBCTests[0].key, AesCBCTests[0].key[:aes.BlockSize], AesCBCTests[0].pad)
 	}
 }
