@@ -12,7 +12,9 @@
 // * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 package utils
 
-import "testing"
+import (
+	"testing"
+)
 
 //go test -bench=BenchmarkRandStr -benchmem
 //cpu: Intel(R) Core(TM) i5-10400 CPU @ 2.90GHz
@@ -28,6 +30,16 @@ func BenchmarkRandString(b *testing.B) {
 //BenchmarkRandStringByString-12           5976949               198.2 ns/op            16 B/op          1 allocs/op
 func BenchmarkRandStringByString(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		RandStrByStr(stdStr, 10)
+		RandStrByStr(StdStr, 10)
+	}
+}
+
+//go test -bench=BenchmarkBKDRHash -benchmem
+//cpu: Intel(R) Core(TM) i5-10400 CPU @ 2.90GHz
+//BenchmarkBKDRHash-12            26713266                45.58 ns/op            0 B/op          0 allocs/op
+//ops will grow with str length add.
+func BenchmarkBKDRHash(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		BKDRHash(StdStr)
 	}
 }
