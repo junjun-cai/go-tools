@@ -2,7 +2,7 @@
 // ***                               G O L A N D   S T U D I O S                               ***
 // ***********************************************************************************************
 // * Auth: ColeCai
-// * Date: 2021/12/16 10:48:14
+// * Date: 2021/12/15 10:20:44
 // * File: utils.go
 // * Proj: go-tools
 // * Pack: utils
@@ -23,7 +23,7 @@ import (
 // * SUMMARY:
 // * WARNING:
 // * HISTORY:
-// *    -create: 2021/12/16 10:20:44 ColeCai.
+// *    -create: 2021/12/15 10:20:44 ColeCai.
 // ***********************************************************************************************
 func PKCS7Padding(cipherText []byte, blockSize int) []byte {
 	padding := blockSize - len(cipherText)%blockSize
@@ -35,7 +35,7 @@ func PKCS7Padding(cipherText []byte, blockSize int) []byte {
 // * SUMMARY:
 // * WARNING:
 // * HISTORY:
-// *    -create: 2021/12/16 10:20:44 ColeCai.
+// *    -create: 2021/12/15 10:20:44 ColeCai.
 // ***********************************************************************************************
 func PKCS7UnPadding(origData []byte) []byte {
 	length := len(origData)
@@ -47,7 +47,7 @@ func PKCS7UnPadding(origData []byte) []byte {
 // * SUMMARY:
 // * WARNING:
 // * HISTORY:
-// *    -create: 2021/12/16 10:20:44 ColeCai.
+// *    -create: 2021/12/15 10:20:44 ColeCai.
 // ***********************************************************************************************
 func AesCBCEncrypt(decrypted, aesKey []byte) ([]byte, error) {
 	ciphers, err := aes.NewCipher(aesKey)
@@ -66,7 +66,7 @@ func AesCBCEncrypt(decrypted, aesKey []byte) ([]byte, error) {
 // * SUMMARY:
 // * WARNING:
 // * HISTORY:
-// *    -create: 2021/12/16 10:20:44 ColeCai.
+// *    -create: 2021/12/15 10:20:44 ColeCai.
 // ***********************************************************************************************
 func AesCBCDecrypt(encrypted, aesKey []byte) ([]byte, error) {
 	ciphers, err := aes.NewCipher(aesKey)
