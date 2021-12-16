@@ -52,31 +52,3 @@ func AesCBCDecrypt(encrypted, aesKey, iv []byte, padding PaddingT) ([]byte, erro
 	}
 	return CBCDecrypt(ciphers, encrypted, iv, padding)
 }
-
-// ***********************************************************************************************
-// * SUMMARY:
-// * WARNING:
-// * HISTORY:
-// *    -create: 2021/12/16 15:58:08 ColeCai.
-// ***********************************************************************************************
-func AesCFBEncrypt(decrypted, aesKey, iv []byte) ([]byte, error) {
-	ciphers, err := aes.NewCipher(aesKey)
-	if err != nil {
-		return nil, err
-	}
-	return CFBEncrypt(ciphers, decrypted, iv)
-}
-
-// ***********************************************************************************************
-// * SUMMARY:
-// * WARNING:
-// * HISTORY:
-// *    -create: 2021/12/16 15:59:11 ColeCai.
-// ***********************************************************************************************
-func AesCFBDecrypt(encrypted, aesKey, iv []byte) ([]byte, error) {
-	ciphers, err := aes.NewCipher(aesKey)
-	if err != nil {
-		return nil, err
-	}
-	return CFBDecrypt(ciphers, encrypted, iv)
-}
