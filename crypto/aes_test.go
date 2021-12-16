@@ -14,6 +14,7 @@ package crypto
 
 import (
 	"bytes"
+	"crypto/aes"
 	"testing"
 )
 
@@ -76,7 +77,7 @@ var AesCBCTests = []struct {
 
 func TestAesCBCEncrypt(t *testing.T) {
 	for _, test := range AesCBCTests {
-		data, err := AesCBCEncrypt(test.in, test.key)
+		data, err := AesCBCEncrypt(test.in, test.key, test.key[:aes.BlockSize])
 		if err != nil {
 			t.Errorf("%s AesCBCEncrypt failed,err:%+v", test.name, err)
 			continue
@@ -91,7 +92,7 @@ func TestAesCBCEncrypt(t *testing.T) {
 
 func TestAesCBCDecrypt(t *testing.T) {
 	for _, test := range AesCBCTests {
-		data, err := AesCBCDecrypt(test.out, test.key)
+		data, err := AesCBCDecrypt(test.out, test.key, test.key[:aes.BlockSize])
 		if err != nil {
 			t.Errorf("%s AesCBCDecrypt failed,err:%+v", test.name, err)
 			continue
@@ -109,7 +110,7 @@ func TestAesCBCDecrypt(t *testing.T) {
 //BenchmarkAesCBCEncrypt-12        2215071               537.2 ns/op           752 B/op         10 allocs/op
 func BenchmarkAesCBCEncrypt(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		_, _ = AesCBCEncrypt(AesCBCTests[0].in, AesCBCTests[0].key)
+		_, _ = AesCBCEncrypt(AesCBCTests[0].in, AesCBCTests[0].key, AesCBCTests[0].key[:aes.BlockSize])
 	}
 }
 
@@ -118,6 +119,6 @@ func BenchmarkAesCBCEncrypt(b *testing.B) {
 //BenchmarkAesCBCDecrypt-12        2575945               435.8 ns/op           624 B/op          8 allocs/op
 func BenchmarkAesCBCDecrypt(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		_, _ = AesCBCDecrypt(AesCBCTests[0].out, AesCBCTests[0].key)
+		_, _ = AesCBCDecrypt(AesCBCTests[0].out, AesCBCTests[0].key, AesCBCTests[0].key[:aes.BlockSize])
 	}
 }

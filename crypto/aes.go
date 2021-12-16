@@ -25,10 +25,10 @@ import (
 // * HISTORY:
 // *    -create: 2021/12/15 10:20:44 ColeCai.
 // ***********************************************************************************************
-func PKCS7Padding(cipherText []byte, blockSize int) []byte {
-	padding := blockSize - len(cipherText)%blockSize
+func PKCS7Padding(decrypted []byte, blockSize int) []byte {
+	padding := blockSize - len(decrypted)%blockSize
 	padText := bytes.Repeat([]byte{byte(padding)}, padding)
-	return append(cipherText, padText...)
+	return append(decrypted, padText...)
 }
 
 // ***********************************************************************************************
@@ -37,26 +37,28 @@ func PKCS7Padding(cipherText []byte, blockSize int) []byte {
 // * HISTORY:
 // *    -create: 2021/12/15 10:20:44 ColeCai.
 // ***********************************************************************************************
-func PKCS7UnPadding(origData []byte) []byte {
-	length := len(origData)
-	unPadding := int(origData[length-1])
-	return origData[:(length - unPadding)]
+func PKCS7UnPadding(decrypted []byte) []byte {
+	length := len(decrypted)
+	unPadding := int(decrypted[length-1])
+	return decrypted[:(length - unPadding)]
 }
 
 // ***********************************************************************************************
 // * SUMMARY:
 // * WARNING:
+// * 	-aesKey must 16,24 or 32 bytes.
 // * HISTORY:
 // *    -create: 2021/12/15 10:20:44 ColeCai.
+// * 	-update: 2021/12/16 11:25:32 ColeCai. encrypt with customize iv.
 // ***********************************************************************************************
-func AesCBCEncrypt(decrypted, aesKey []byte) ([]byte, error) {
+func AesCBCEncrypt(decrypted, aesKey, iv []byte) ([]byte, error) {
 	ciphers, err := aes.NewCipher(aesKey)
 	if err != nil {
 		return nil, err
 	}
 	blockSize := ciphers.BlockSize()
 	decrypted = PKCS7Padding(decrypted, blockSize)
-	blockMode := cipher.NewCBCEncrypter(ciphers, aesKey[:blockSize])
+	blockMode := cipher.NewCBCEncrypter(ciphers, iv)
 	encrypted := make([]byte, len(decrypted))
 	blockMode.CryptBlocks(encrypted, decrypted)
 	return encrypted, nil
@@ -65,18 +67,19 @@ func AesCBCEncrypt(decrypted, aesKey []byte) ([]byte, error) {
 // ***********************************************************************************************
 // * SUMMARY:
 // * WARNING:
+// * 	-aesKey must 16,24 or 32 bytes.
 // * HISTORY:
 // *    -create: 2021/12/15 10:20:44 ColeCai.
+// * 	-update: 2021/12/16 11:26:42 ColeCai. decrypt with customize iv.
 // ***********************************************************************************************
-func AesCBCDecrypt(encrypted, aesKey []byte) ([]byte, error) {
+func AesCBCDecrypt(encrypted, aesKey, iv []byte) ([]byte, error) {
 	ciphers, err := aes.NewCipher(aesKey)
 	if err != nil {
 		return nil, err
 	}
-	blockSize := ciphers.BlockSize()
-	blockMode := cipher.NewCBCDecrypter(ciphers, aesKey[:blockSize])
-	origData := make([]byte, len(encrypted))
-	blockMode.CryptBlocks(origData, encrypted)
-	origData = PKCS7UnPadding(origData)
-	return origData, nil
+	blockMode := cipher.NewCBCDecrypter(ciphers, iv)
+	decrypted := make([]byte, len(encrypted))
+	blockMode.CryptBlocks(decrypted, encrypted)
+	decrypted = PKCS7UnPadding(decrypted)
+	return decrypted, nil
 }
