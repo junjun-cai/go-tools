@@ -134,3 +134,104 @@ func BenchmarkAesCBCDecrypt(b *testing.B) {
 		_, _ = AesCBCDecrypt(AesCBCTests[0].out, AesCBCTests[0].key, AesCBCTests[0].key[:aes.BlockSize], AesCBCTests[0].pad)
 	}
 }
+
+var AesECBTests = []struct {
+	name string
+	key  []byte
+	in   []byte
+	out  []byte
+	pad  PaddingT
+}{
+	{
+		"ECB-AES128",
+		AesKey128,
+		[]byte("this is aes ecb mode encrypt, aes key is 128 bits"),
+		[]byte{
+			0xb0, 0x7b, 0xbc, 0x88, 0x2f, 0x14, 0x16, 0x99, 0x31, 0xce, 0xd6, 0x25, 0x6a,
+			0xea, 0xc9, 0x99, 0xfd, 0x56, 0xeb, 0x5b, 0x70, 0x98, 0x74, 0xf2, 0x6e, 0x62,
+			0x3f, 0xbb, 0x1f, 0x87, 0x65, 0xd8, 0xa0, 0xb4, 0x03, 0x17, 0x66, 0x8a, 0xb1,
+			0x94, 0xf6, 0x6e, 0xaa, 0x9b, 0x8c, 0x2c, 0xfd, 0x0c, 0x1c, 0xd5, 0x16, 0xb6,
+			0xa1, 0xdd, 0x26, 0x86, 0x88, 0x12, 0x95, 0x05, 0x80, 0x18, 0x17, 0x47},
+		PKCS7_PADDING,
+	},
+	{
+		"ECB-AES192",
+		AesKey192,
+		[]byte("this is aes ecb mode encrypt, aes key is 192 bits"),
+		[]byte{
+			0xa6, 0xd7, 0x93, 0xfb, 0x0a, 0x1f, 0x99, 0xe7, 0x0d, 0xdc, 0x9b, 0x64, 0xd8,
+			0x43, 0xed, 0xab, 0xcc, 0xae, 0x7b, 0x58, 0xfe, 0x69, 0x77, 0xa5, 0xc6, 0x85,
+			0xcc, 0x46, 0xb6, 0x04, 0x5c, 0x8f, 0xc4, 0xbd, 0xa6, 0x70, 0x9e, 0x10, 0xf8,
+			0x4b, 0xd7, 0xee, 0x18, 0x8d, 0xcb, 0xf2, 0x04, 0x36, 0xdc, 0x3c, 0x2d, 0xd8,
+			0xb5, 0xdd, 0x9b, 0x0f, 0xc3, 0xae, 0x7e, 0xaa, 0x92, 0x12, 0xde, 0x00},
+		PKCS7_PADDING,
+	},
+	{
+		"ECB-AES256",
+		AesKey256,
+		[]byte("this is aes ecb mode encrypt, aes key is 256 bits"),
+		[]byte{
+			0x8e, 0x8c, 0xf6, 0x7d, 0x59, 0x66, 0xf6, 0xbf, 0xb1, 0x92, 0xc3, 0x9d, 0xaa,
+			0xe0, 0x2c, 0x6b, 0xe7, 0x19, 0x6d, 0xf9, 0xc4, 0xfb, 0x9d, 0xd6, 0x3f, 0x6a,
+			0x9f, 0x78, 0xed, 0x97, 0xea, 0x34, 0xfb, 0x21, 0xa7, 0x33, 0xba, 0x30, 0x43,
+			0x18, 0xc4, 0x05, 0x7a, 0x0a, 0x8b, 0x7d, 0x30, 0xd8, 0x1e, 0x6a, 0xa5, 0xa4,
+			0xac, 0x90, 0xc4, 0xf0, 0xc3, 0xc2, 0x2e, 0x5b, 0xab, 0x53, 0x50, 0x05},
+		PKCS7_PADDING,
+	},
+}
+
+func TestAesECBEncrypt(t *testing.T) {
+	for _, test := range AesECBTests {
+		data, err := AesECBEncrypt(test.in, test.key, test.pad)
+		if err != nil {
+			t.Errorf("%s AesECBEncrypt failed,err:%+v", test.name, err)
+			continue
+		}
+		if !bytes.Equal(data, test.out) {
+			t.Errorf("%s: AesECBEncrypt\nhave: %x\nwant: %x", test.name, data, test.out)
+			continue
+		}
+		t.Logf("%s: AesECBEncrypt\nhave: %x\nwant: %x", test.name, data, test.out)
+	}
+}
+
+func TestAesECBDecrypt(t *testing.T) {
+	for _, test := range AesECBTests {
+		data, err := AesECBDecrypt(test.out, test.key, PKCS7_PADDING)
+		if err != nil {
+			t.Errorf("%s AesECBDecrypt failed,err:%+v", test.name, err)
+			continue
+		}
+		if !bytes.Equal(data, test.in) {
+			t.Errorf("%s: AesECBDecrypt\nhave: %x\nwant: %x", test.name, data, test.in)
+			continue
+		}
+		t.Logf("%s: AesECBDecrypt\nhave: %s\nwant: %s", test.name, data, test.in)
+	}
+}
+
+//$ go test -bench=BenchmarkAesECBEncrypt --benchmem --count=3
+//goos: windows
+//goarch: amd64
+//cpu: Intel(R) Core(TM) i5-10400 CPU @ 2.90GHz
+//BenchmarkAesECBEncrypt-12        2978385               396.0 ns/op           640 B/op          7 allocs/op
+//BenchmarkAesECBEncrypt-12        3063946               390.4 ns/op           640 B/op          7 allocs/op
+//BenchmarkAesECBEncrypt-12        3057181               388.5 ns/op           640 B/op          7 allocs/op
+func BenchmarkAesECBEncrypt(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		_, _ = AesECBEncrypt(AesECBTests[0].in, AesECBTests[0].key, AesECBTests[0].pad)
+	}
+}
+
+//$ go test -bench=BenchmarkAesECBDecrypt --benchmem --count=3
+//goos: windows
+//goarch: amd64
+//cpu: Intel(R) Core(TM) i5-10400 CPU @ 2.90GHz
+//BenchmarkAesECBDecrypt-12        4198688               285.8 ns/op           512 B/op          5 allocs/op
+//BenchmarkAesECBDecrypt-12        4198124               283.8 ns/op           512 B/op          5 allocs/op
+//BenchmarkAesECBDecrypt-12        4211775               286.2 ns/op           512 B/op          5 allocs/op
+func BenchmarkAesECBDecrypt(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		_, _ = AesECBDecrypt(AesECBTests[0].out, AesECBTests[0].key, AesECBTests[0].pad)
+	}
+}

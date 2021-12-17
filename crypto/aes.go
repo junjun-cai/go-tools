@@ -52,3 +52,31 @@ func AesCBCDecrypt(encrypted, aesKey, iv []byte, padding PaddingT) ([]byte, erro
 	}
 	return CBCDecrypt(ciphers, encrypted, iv, padding)
 }
+
+// ***********************************************************************************************
+// * SUMMARY:
+// * WARNING:
+// * HISTORY:
+// *    -create: 2021/12/17 10:02:44 ColeCai.
+// ***********************************************************************************************
+func AesECBEncrypt(decrypted, aesKey []byte, padding PaddingT) ([]byte, error) {
+	ciphers, err := aes.NewCipher(aesKey)
+	if err != nil {
+		return nil, err
+	}
+	return ECBEncrypt(ciphers, decrypted, padding)
+}
+
+// ***********************************************************************************************
+// * SUMMARY:
+// * WARNING:
+// * HISTORY:
+// *    -create: 2021/12/17 10:04:06 ColeCai.
+// ***********************************************************************************************
+func AesECBDecrypt(encrypted, aesKey []byte, padding PaddingT) ([]byte, error) {
+	ciphers, err := aes.NewCipher(aesKey)
+	if err != nil {
+		return nil, err
+	}
+	return ECBDecrypt(ciphers, encrypted, padding)
+}
