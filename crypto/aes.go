@@ -9,6 +9,12 @@
 // * Ides: GoLand
 // *----------------------------------------------------------------------------------------------
 // * Functions:
+// * 	-AesCBCEncrypt(decrypted, desKey, iv []byte, padding PaddingT) ([]byte, error)
+// * 	-AesCBCDecrypt(encrypted, desKey, iv []byte, padding PaddingT) ([]byte, error)
+// * 	-AesECBEncrypt(decrypted, desKey []byte, padding PaddingT) ([]byte, error)
+// * 	-AesECBDecrypt(encrypted, desKey []byte, padding PaddingT) ([]byte, error)
+// * 	-AesCFBEncrypt(decrypted, aesKey, iv []byte) ([]byte, error)
+// *	-AesCFBDecrypt(encrypted, aesKey, iv []byte) ([]byte, error)
 // * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 package crypto
@@ -79,4 +85,32 @@ func AesECBDecrypt(encrypted, aesKey []byte, padding PaddingT) ([]byte, error) {
 		return nil, err
 	}
 	return ECBDecrypt(ciphers, encrypted, padding)
+}
+
+// ***********************************************************************************************
+// * SUMMARY:
+// * WARNING:
+// * HISTORY:
+// *    -create: 2021/12/20 10:11:36 ColeCai.
+// ***********************************************************************************************
+func AesCFBEncrypt(decrypted, aesKey, iv []byte) ([]byte, error) {
+	ciphers, err := aes.NewCipher(aesKey)
+	if err != nil {
+		return nil, err
+	}
+	return CFBEncrypt(ciphers, decrypted, iv)
+}
+
+// ***********************************************************************************************
+// * SUMMARY:
+// * WARNING:
+// * HISTORY:
+// *    -create: 2021/12/20 10:13:11 ColeCai.
+// ***********************************************************************************************
+func AesCFBDecrypt(encrypted, aesKey, iv []byte) ([]byte, error) {
+	ciphers, err := aes.NewCipher(aesKey)
+	if err != nil {
+		return nil, err
+	}
+	return CFBDecrypt(ciphers, encrypted, iv)
 }

@@ -235,3 +235,94 @@ func BenchmarkAesECBDecrypt(b *testing.B) {
 		_, _ = AesECBDecrypt(AesECBTests[0].out, AesECBTests[0].key, AesECBTests[0].pad)
 	}
 }
+
+var AesCFBTests = []struct {
+	name string
+	key  []byte
+	in   []byte
+	out  []byte
+	pad  PaddingT
+}{
+	{
+		"ECB-AES128",
+		AesKey128,
+		[]byte("this is aes cfb mode encrypt, aes key is 128 bits"),
+		[]byte{
+			0x0b, 0x5d, 0xf8, 0xa0, 0x4f, 0xbc, 0x64, 0x83, 0x1a, 0x08, 0x9a, 0xc0, 0xbc,
+			0xf5, 0x29, 0x5a, 0x7e, 0x60, 0xbb, 0x24, 0x2b, 0x31, 0x82, 0x0c, 0x59, 0x49,
+			0x66, 0x18, 0x3b, 0x2c, 0x14, 0xd7, 0x8b, 0x39, 0x17, 0x0c, 0xb7, 0xfb, 0xf9,
+			0x75, 0xbf, 0x4d, 0x52, 0xfd, 0x6d, 0x7a, 0xca, 0x7e, 0x76},
+		PKCS7_PADDING,
+	},
+	{
+		"ECB-AES192",
+		AesKey192,
+		[]byte("this is aes cfb mode encrypt, aes key is 192 bits"),
+		[]byte{
+			0x9e, 0x05, 0x97, 0x2a, 0xb3, 0x75, 0xd3, 0x78, 0x83, 0xbe, 0x95, 0x9c, 0x82,
+			0x3e, 0x68, 0xbd, 0x3f, 0x8f, 0x1a, 0xdd, 0x1a, 0x4d, 0xb2, 0x3d, 0x91, 0xbd,
+			0x15, 0x6e, 0x00, 0xc1, 0x2d, 0x0e, 0x37, 0xb3, 0xe4, 0x8b, 0x29, 0xe5, 0xcf,
+			0x3b, 0x43, 0xec, 0x48, 0x04, 0x2f, 0xa2, 0xb3, 0x8f, 0xe8},
+		PKCS7_PADDING,
+	},
+	{
+		"ECB-AES256",
+		AesKey256,
+		[]byte("this is aes cfb mode encrypt, aes key is 256 bits"),
+		[]byte{
+			0x19, 0xd5, 0x4d, 0x26, 0xaa, 0x7b, 0x2d, 0xe6, 0x7b, 0x99, 0x31, 0x24, 0xe1,
+			0xa7, 0x5b, 0x06, 0xae, 0x7e, 0xc9, 0xe5, 0x02, 0xbd, 0xed, 0x3f, 0xd7, 0x56,
+			0x76, 0xf0, 0x0b, 0x81, 0xc0, 0xb9, 0x61, 0x3c, 0xc4, 0x86, 0xe8, 0xf7, 0x68,
+			0x57, 0x80, 0x22, 0xee, 0xa8, 0xcb, 0x92, 0xcd, 0x5d, 0x71},
+		PKCS7_PADDING,
+	},
+}
+
+func TestAesCFBEncrypt(t *testing.T) {
+	for _, test := range AesCFBTests {
+		encrypted, err := AesCFBEncrypt(test.in, test.key, test.key[0:aes.BlockSize])
+		if err != nil {
+			t.Errorf("%s AesCFBEncrypt failed,err:%+v", test.name, err)
+			continue
+		}
+		if !bytes.Equal(encrypted, test.out) {
+			t.Errorf("%s: AesCFBEncrypt\nhave: %x\nwant: %x", test.name, encrypted, test.out)
+			continue
+		}
+		t.Logf("%s: AesCFBEncrypt\nhave: %x\nwant: %x", test.name, encrypted, test.out)
+	}
+}
+
+func TestAesCFBDecrypt(t *testing.T) {
+	for _, test := range AesCFBTests {
+		decrypted, err := AesCFBDecrypt(test.out, test.key, test.key[0:aes.BlockSize])
+		if err != nil {
+			t.Errorf("%s AesCFBDecrypt failed,err:%+v", test.name, err)
+			continue
+		}
+		if !bytes.Equal(decrypted, test.in) {
+			t.Errorf("%s: AesCFBDecrypt\nhave: %x\nwant: %x", test.name, decrypted, test.in)
+			continue
+		}
+		t.Logf("%s: AesCFBDecrypt\nhave: %s\nwant: %s", test.name, decrypted, test.in)
+	}
+}
+
+//$ go test -bench=BenchmarkAesCFBDecrypt --benchmem --count=3
+//goos: windows
+//goarch: amd64
+//cpu: Intel(R) Core(TM) i5-10400 CPU @ 2.90GHz
+//BenchmarkAesCFBDecrypt-12        2860186               409.4 ns/op           624 B/op          8 allocs/op
+//BenchmarkAesCFBDecrypt-12        2916716               409.6 ns/op           624 B/op          8 allocs/op
+//BenchmarkAesCFBDecrypt-12        2936311               409.3 ns/op           624 B/op          8 allocs/op
+func BenchmarkAesCFBEncrypt(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		_, _ = AesCFBEncrypt(AesCFBTests[0].in, AesCFBTests[0].key, AesCFBTests[0].key[0:aes.BlockSize])
+	}
+}
+
+func BenchmarkAesCFBDecrypt(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		_, _ = AesCFBDecrypt(AesCFBTests[0].out, AesCFBTests[0].key, AesCFBTests[0].key[0:aes.BlockSize])
+	}
+}
