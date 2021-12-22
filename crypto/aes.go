@@ -114,3 +114,31 @@ func AesCFBDecrypt(encrypted, aesKey, iv []byte) ([]byte, error) {
 	}
 	return CFBDecrypt(ciphers, encrypted, iv)
 }
+
+// ***********************************************************************************************
+// * SUMMARY:
+// * WARNING:
+// * HISTORY:
+// *    -create: 2021/12/22 10:44:05 ColeCai.
+// ***********************************************************************************************
+func AesOFBEncrypt(encrypted, aesKey, iv []byte) ([]byte, error) {
+	ciphers, err := aes.NewCipher(aesKey)
+	if err != nil {
+		return nil, err
+	}
+	return OFBCrypto(ciphers, encrypted, iv)
+}
+
+// ***********************************************************************************************
+// * SUMMARY:
+// * WARNING:
+// * HISTORY:
+// *    -create: 2021/12/22 10:44:57 ColeCai.
+// ***********************************************************************************************
+func AesOFBDecrypt(encrypted, aesKey, iv []byte) ([]byte, error) {
+	ciphers, err := aes.NewCipher(aesKey)
+	if err != nil {
+		return nil, err
+	}
+	return OFBCrypto(ciphers, encrypted, iv)
+}
