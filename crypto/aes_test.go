@@ -336,12 +336,12 @@ func BenchmarkAesCFBDecrypt(b *testing.B) {
 	}
 }
 
-func FormatBytes(b []byte) string {
+func FormatBytes(b []byte) {
 	var strs []string
 	for _, v := range b {
 		strs = append(strs, fmt.Sprintf("0x%02x", v))
 	}
-	return strings.Join(strs, ",")
+	fmt.Println("S:", strings.Join(strs, ","))
 }
 
 var AesOFBTests = []struct {
@@ -440,5 +440,103 @@ func BenchmarkAesOFBEncrypt(b *testing.B) {
 func BenchmarkAesOFBDecrypt(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		_, _ = AesOFBDecrypt(AesOFBTests[0].out, AesOFBTests[0].key, AesOFBTests[0].key[0:aes.BlockSize])
+	}
+}
+
+var AesCTRTests = []struct {
+	name string
+	key  []byte
+	in   []byte
+	out  []byte
+	pad  PaddingT
+}{
+	{
+		"CTR-AES128",
+		AesKey128,
+		[]byte("this is aes ctr mode encrypt, aes key is 128 bits"),
+		[]byte{
+			0x0b, 0x5d, 0xf8, 0xa0, 0x4f, 0xbc, 0x64, 0x83, 0x1a, 0x08, 0x9a, 0xc0, 0xbc,
+			0xe7, 0x39, 0x5a, 0x4b, 0x89, 0xc5, 0x17, 0x2c, 0x3c, 0x8d, 0xf4, 0xd4, 0x1e,
+			0x83, 0x8b, 0xd0, 0x30, 0xdb, 0xe0, 0xc9, 0xb1, 0xf3, 0xee, 0x59, 0x20, 0x45,
+			0x77, 0xf7, 0xc0, 0x7c, 0x87, 0xb2, 0x5f, 0x3a, 0x7e, 0x06},
+		PKCS7_PADDING,
+	},
+	{
+		"CTR-AES192",
+		AesKey192,
+		[]byte("this is aes ctr mode encrypt, aes key is 192 bits"),
+		[]byte{
+			0x9e, 0x05, 0x97, 0x2a, 0xb3, 0x75, 0xd3, 0x78, 0x83, 0xbe, 0x95, 0x9c, 0x82,
+			0x2c, 0x78, 0xbd, 0x6d, 0x65, 0x04, 0x21, 0xaf, 0x9c, 0xa5, 0xb2, 0xd3, 0x1a,
+			0x28, 0x6a, 0x6a, 0x70, 0x58, 0xda, 0xfb, 0x51, 0x5b, 0xa4, 0x53, 0xf9, 0x32,
+			0x2f, 0x49, 0xca, 0x69, 0x59, 0x7d, 0xae, 0x0d, 0x3d, 0x48,
+		},
+		PKCS7_PADDING,
+	},
+	{
+		"CTR-AES256",
+		AesKey256,
+		[]byte("this is aes ctr mode encrypt, aes key is 256 bits"),
+		[]byte{
+			0x19, 0xd5, 0x4d, 0x26, 0xaa, 0x7b, 0x2d, 0xe6, 0x7b, 0x99, 0x31, 0x24, 0xe1,
+			0xb5, 0x4b, 0x06, 0xc4, 0x70, 0xe0, 0x3c, 0x2d, 0x45, 0xa7, 0xce, 0x1a, 0xd0,
+			0x7c, 0xf6, 0xa8, 0xff, 0xdc, 0x87, 0x14, 0x21, 0xb7, 0xfe, 0x71, 0x54, 0x6f,
+			0x42, 0x34, 0x03, 0x14, 0x02, 0x16, 0x5d, 0xdd, 0x1f, 0x0c},
+		PKCS7_PADDING,
+	},
+}
+
+func TestAesCTREncrypt(t *testing.T) {
+	for _, test := range AesCTRTests {
+		encrypted, err := AesCTREncrypt(test.in, test.key, test.key[0:aes.BlockSize])
+		if err != nil {
+			t.Errorf("%s AesCTREncrypt failed,err:%+v", test.name, err)
+			continue
+		}
+		if !bytes.Equal(encrypted, test.out) {
+			t.Errorf("%s: AesCTREncrypt\nhave: %x\nwant: %x", test.name, encrypted, test.out)
+			continue
+		}
+		t.Logf("%s: AesCTREncrypt\nhave: %x\nwant: %x", test.name, encrypted, test.out)
+	}
+}
+
+func TestAesCTRDecrypt(t *testing.T) {
+	for _, test := range AesCTRTests {
+		decrypted, err := AesCTRDecrypt(test.out, test.key, test.key[0:aes.BlockSize])
+		if err != nil {
+			t.Errorf("%s AesCTRDecrypt failed,err:%+v", test.name, err)
+			continue
+		}
+		if !bytes.Equal(decrypted, test.in) {
+			t.Errorf("%s: AesCTRDecrypt\nhave: %x\nwant: %x", test.name, decrypted, test.in)
+			continue
+		}
+		t.Logf("%s: AesCTRDecrypt\nhave: %s\nwant: %s", test.name, decrypted, test.in)
+	}
+}
+
+//$ go test -bench=BenchmarkAesCTREncrypt --benchmem --count=3
+//goos: windows
+//cpu: Intel(R) Core(TM) i5-10400 CPU @ 2.90GHz
+//BenchmarkAesCTREncrypt-12        1267471               949.4 ns/op          1120 B/op          8 allocs/op
+//BenchmarkAesCTREncrypt-12        1258188               945.7 ns/op          1120 B/op          8 allocs/op
+//BenchmarkAesCTREncrypt-12        1274462               942.5 ns/op          1120 B/op          8 allocs/op
+func BenchmarkAesCTREncrypt(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		_, _ = AesCTREncrypt(AesCTRTests[0].in, AesCTRTests[0].key, AesCTRTests[0].key[0:aes.BlockSize])
+	}
+}
+
+//$ go test -bench=BenchmarkAesCTRDecrypt --benchmem --count=3
+//goos: windows
+//goarch: amd64
+//cpu: Intel(R) Core(TM) i5-10400 CPU @ 2.90GHz
+//BenchmarkAesCTRDecrypt-12        1268498               948.5 ns/op          1120 B/op          8 allocs/op
+//BenchmarkAesCTRDecrypt-12        1249602               946.4 ns/op          1120 B/op          8 allocs/op
+//BenchmarkAesCTRDecrypt-12        1268564               944.8 ns/op          1120 B/op          8 allocs/op
+func BenchmarkAesCTRDecrypt(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		_, _ = AesCTRDecrypt(AesCTRTests[0].out, AesCTRTests[0].key, AesCTRTests[0].key[0:aes.BlockSize])
 	}
 }

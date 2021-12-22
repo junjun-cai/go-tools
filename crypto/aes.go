@@ -142,3 +142,31 @@ func AesOFBDecrypt(encrypted, aesKey, iv []byte) ([]byte, error) {
 	}
 	return OFBCrypto(ciphers, encrypted, iv)
 }
+
+// ***********************************************************************************************
+// * SUMMARY:
+// * WARNING:
+// * HISTORY:
+// *    -create: 2021/12/22 11:10:11 ColeCai.
+// ***********************************************************************************************
+func AesCTREncrypt(decrypted, aesKey, iv []byte) ([]byte, error) {
+	ciphers, err := aes.NewCipher(aesKey)
+	if err != nil {
+		return nil, err
+	}
+	return CTRCrypto(ciphers, decrypted, iv)
+}
+
+// ***********************************************************************************************
+// * SUMMARY:
+// * WARNING:
+// * HISTORY:
+// *    -create: 2021/12/22 11:10:52 ColeCai.
+// ***********************************************************************************************
+func AesCTRDecrypt(decrypted, aesKey, iv []byte) ([]byte, error) {
+	ciphers, err := aes.NewCipher(aesKey)
+	if err != nil {
+		return nil, err
+	}
+	return CTRCrypto(ciphers, decrypted, iv)
+}
