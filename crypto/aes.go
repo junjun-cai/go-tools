@@ -15,6 +15,10 @@
 // * 	-AesECBDecrypt(encrypted, desKey []byte, padding PaddingT) ([]byte, error)
 // * 	-AesCFBEncrypt(decrypted, aesKey, iv []byte) ([]byte, error)
 // *	-AesCFBDecrypt(encrypted, aesKey, iv []byte) ([]byte, error)
+// * 	-AesOFBEncrypt(encrypted, aesKey, iv []byte) ([]byte, error)
+// * 	-AesOFBDecrypt(encrypted, aesKey, iv []byte) ([]byte, error)
+// * 	-AesCTREncrypt(decrypted, aesKey, iv []byte) ([]byte, error)
+// * 	-AesCTRDecrypt(decrypted, aesKey, iv []byte) ([]byte, error)
 // * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 package crypto
