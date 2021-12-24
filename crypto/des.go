@@ -11,6 +11,8 @@
 // * Functions:
 // * 	-DesCBCEncrypt(decrypted, desKey, iv []byte, padding PaddingT) ([]byte, error)
 // * 	-DesCBCDecrypt(encrypted, desKey, iv []byte, padding PaddingT) ([]byte, error)
+// * 	-DesECBEncrypt(decrypted, desKey []byte, padding PaddingT) ([]byte, error)
+// * 	-DesECBDecrypt(decrypted, desKey []byte, padding PaddingT) ([]byte, error)
 // * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 package crypto
