@@ -52,7 +52,7 @@ func DesCBCDecrypt(encrypted []byte, desKey, iv []byte, padding PaddingT) ([]byt
 // ***********************************************************************************************
 // * SUMMARY:
 // * WARNING:
-// * 	-deskey and iv length must equal 8. if not DesCBCDecrypt will panic.
+// * 	-deskey length must equal 8. if not DesCBCDecrypt will panic.
 // * HISTORY:
 // *    -create: 2021/12/24 10:15:55 ColeCai.
 // ***********************************************************************************************
@@ -67,6 +67,7 @@ func DesECBEncrypt(decrypted, desKey []byte, padding PaddingT) ([]byte, error) {
 // ***********************************************************************************************
 // * SUMMARY:
 // * WARNING:
+// * 	-deskey length must equal 8. if not DesCBCDecrypt will panic.
 // * HISTORY:
 // *    -create: 2021/12/24 10:18:16 ColeCai.
 // ***********************************************************************************************

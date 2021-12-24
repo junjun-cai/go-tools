@@ -90,3 +90,73 @@ func BenchmarkDesCBCDecrypt(b *testing.B) {
 		_, _ = DesCBCDecrypt(DesCBCTests.out, DesCBCTests.key, DesCBCTests.key, DesCBCTests.pad)
 	}
 }
+
+var DesECBTests = struct {
+	name string
+	key  []byte
+	in   []byte
+	out  []byte
+	pad  PaddingT
+}{
+	"ECB-DES8",
+	DesKey8,
+	[]byte("this is des ecb mode encrypt, aes key is 64 bits"),
+	[]byte{
+		0xd9, 0xcd, 0x51, 0x00, 0x0d, 0xb6, 0x9d, 0x23, 0xea, 0xba, 0xd0, 0x6e, 0x4c, 0xbe,
+		0x15, 0xab, 0x50, 0xbc, 0x76, 0x92, 0x61, 0xea, 0xcb, 0x31, 0xf6, 0x41, 0xea, 0x21,
+		0x50, 0xd9, 0xb8, 0x96, 0x4f, 0xe6, 0xfb, 0x10, 0x1d, 0xbf, 0x9b, 0xf1, 0x23, 0x3e,
+		0x25, 0x03, 0x01, 0x75, 0xcb, 0x63, 0x3d, 0x22, 0xd1, 0x3c, 0x3d, 0x4d, 0x5f, 0x1e},
+	PKCS7_PADDING,
+}
+
+func TestDesECBEncrypt(t *testing.T) {
+	encrypted, err := DesECBEncrypt(DesECBTests.in, DesECBTests.key, DesECBTests.pad)
+	if err != nil {
+		t.Errorf("%s DesECBEncrypt failed,err:%+v", DesECBTests.name, err)
+		return
+	}
+	if !bytes.Equal(encrypted, DesECBTests.out) {
+		t.Errorf("%s: DesECBEncrypt\nhave: %x\nwant: %x", DesECBTests.name, encrypted, DesECBTests.out)
+		return
+	}
+	t.Logf("%s: DesECBEncrypt\nhave: %x\nwant: %x", DesECBTests.name, encrypted, DesECBTests.out)
+}
+
+func TestDesECBDecrypt(t *testing.T) {
+	decrypted, err := DesECBDecrypt(DesECBTests.out, DesECBTests.key, DesECBTests.pad)
+	if err != nil {
+		t.Errorf("%s DesECBDecrypt failed,err:%+v", DesECBTests.name, err)
+		return
+	}
+	if !bytes.Equal(decrypted, DesECBTests.in) {
+		t.Errorf("%s: DesECBDecrypt\nhave: %x\nwant: %x", DesECBTests.name, decrypted, DesECBTests.in)
+		return
+	}
+	t.Logf("%s: DesECBDecrypt\nhave: %x\nwant: %x", DesECBTests.name, decrypted, DesECBTests.in)
+}
+
+//$ go test -bench=BenchmarkDesECBEncrypt --benchmem --count=3
+//goos: windows
+//goarch: amd64
+//cpu: Intel(R) Core(TM) i5-10400 CPU @ 2.90GHz
+//BenchmarkDesECBEncrypt-12         524476              2320 ns/op             296 B/op          4 allocs/op
+//BenchmarkDesECBEncrypt-12         533138              2316 ns/op             296 B/op          4 allocs/op
+//BenchmarkDesECBEncrypt-12         532263              2313 ns/op             296 B/op          4 allocs/op
+func BenchmarkDesECBEncrypt(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		_, _ = DesECBEncrypt(DesECBTests.in, DesECBTests.key, DesECBTests.pad)
+	}
+}
+
+//$ go test -bench=BenchmarkDesECBDecrypt --benchmem --count=3
+//goos: windows
+//goarch: amd64
+//cpu: Intel(R) Core(TM) i5-10400 CPU @ 2.90GHz
+//BenchmarkDesECBDecrypt-12         536494              2224 ns/op             192 B/op          2 allocs/op
+//BenchmarkDesECBDecrypt-12         557988              2214 ns/op             192 B/op          2 allocs/op
+//BenchmarkDesECBDecrypt-12         545134              2213 ns/op             192 B/op          2 allocs/op
+func BenchmarkDesECBDecrypt(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		_, _ = DesECBDecrypt(DesECBTests.out, DesECBTests.key, DesECBTests.pad)
+	}
+}
