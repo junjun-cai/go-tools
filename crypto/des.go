@@ -15,7 +15,9 @@
 
 package crypto
 
-import "crypto/des"
+import (
+	"crypto/des"
+)
 
 // ***********************************************************************************************
 // * SUMMARY:
@@ -45,4 +47,33 @@ func DesCBCDecrypt(encrypted []byte, desKey, iv []byte, padding PaddingT) ([]byt
 		return nil, err
 	}
 	return CBCDecrypt(ciphers, encrypted, iv, padding)
+}
+
+// ***********************************************************************************************
+// * SUMMARY:
+// * WARNING:
+// * 	-deskey and iv length must equal 8. if not DesCBCDecrypt will panic.
+// * HISTORY:
+// *    -create: 2021/12/24 10:15:55 ColeCai.
+// ***********************************************************************************************
+func DesECBEncrypt(decrypted, desKey []byte, padding PaddingT) ([]byte, error) {
+	ciphers, err := des.NewCipher(desKey)
+	if err != nil {
+		return nil, err
+	}
+	return ECBEncrypt(ciphers, decrypted, padding)
+}
+
+// ***********************************************************************************************
+// * SUMMARY:
+// * WARNING:
+// * HISTORY:
+// *    -create: 2021/12/24 10:18:16 ColeCai.
+// ***********************************************************************************************
+func DesECBDecrypt(encrypted, desKey []byte, padding PaddingT) ([]byte, error) {
+	ciphers, err := des.NewCipher(desKey)
+	if err != nil {
+		return nil, err
+	}
+	return ECBDecrypt(ciphers, encrypted, padding)
 }
