@@ -80,3 +80,31 @@ func DesECBDecrypt(encrypted, desKey []byte, padding PaddingT) ([]byte, error) {
 	}
 	return ECBDecrypt(ciphers, encrypted, padding)
 }
+
+// ***********************************************************************************************
+// * SUMMARY:
+// * WARNING:
+// * HISTORY:
+// *    -create: 2021/12/25 15:04:28 ColeCai.
+// ***********************************************************************************************
+func DesCFBEncrypt(decrypted, desKey, iv []byte) ([]byte, error) {
+	ciphers, err := des.NewCipher(desKey)
+	if err != nil {
+		return nil, err
+	}
+	return CFBEncrypt(ciphers, decrypted, iv)
+}
+
+// ***********************************************************************************************
+// * SUMMARY:
+// * WARNING:
+// * HISTORY:
+// *    -create: 2021/12/25 15:05:28 ColeCai.
+// ***********************************************************************************************
+func DesCFBDecrypt(encrypted, desKey, iv []byte) ([]byte, error) {
+	ciphers, err := des.NewCipher(desKey)
+	if err != nil {
+		return nil, err
+	}
+	return CFBDecrypt(ciphers, encrypted, iv)
+}
