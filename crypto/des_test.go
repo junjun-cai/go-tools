@@ -160,3 +160,73 @@ func BenchmarkDesECBDecrypt(b *testing.B) {
 		_, _ = DesECBDecrypt(DesECBTests.out, DesECBTests.key, DesECBTests.pad)
 	}
 }
+
+var DesCFBTests = struct {
+	name string
+	key  []byte
+	in   []byte
+	out  []byte
+	pad  PaddingT
+}{
+	"CFB-DES8",
+	DesKey8,
+	[]byte("this is des cfb mode encrypt, aes key is 64 bits"),
+	[]byte{
+		0x73, 0x44, 0xaa, 0x1c, 0x64, 0x5c, 0x18, 0x39, 0x95, 0x9b, 0x15, 0xb1, 0x31, 0x2d,
+		0x34, 0x45, 0x6f, 0xc1, 0x95, 0xfb, 0xc2, 0xb7, 0x6f, 0x2c, 0x8f, 0xf0, 0xf9, 0xe6,
+		0xd9, 0x8a, 0x62, 0xfa, 0x31, 0x51, 0x91, 0x14, 0x8a, 0xb4, 0x4b, 0x17, 0x41, 0xdd,
+		0xf3, 0x3f, 0x39, 0xc2, 0x58, 0x72},
+	PKCS7_PADDING,
+}
+
+func TestDesCFBEncrypt(t *testing.T) {
+	encrypted, err := DesCFBEncrypt(DesCFBTests.in, DesCFBTests.key, DesCFBTests.key)
+	if err != nil {
+		t.Errorf("%s DesCFBEncrypt failed,err:%+v", DesCFBTests.name, err)
+		return
+	}
+	if !bytes.Equal(encrypted, DesCFBTests.out) {
+		t.Errorf("%s: DesCFBEncrypt\nhave: %x\nwant: %x", DesCFBTests.name, encrypted, DesCFBTests.out)
+		return
+	}
+	t.Logf("%s: DesCFBEncrypt\nhave: %x\nwant: %x", DesCFBTests.name, encrypted, DesCFBTests.out)
+}
+
+func TestDesCFBDecrypt(t *testing.T) {
+	decrypted, err := DesCFBDecrypt(DesCFBTests.out, DesCFBTests.key, DesECBTests.key)
+	if err != nil {
+		t.Errorf("%s DesCFBDecrypt failed,err:%+v", DesCFBTests.name, err)
+		return
+	}
+	if !bytes.Equal(decrypted, DesCFBTests.in) {
+		t.Errorf("%s: DesCFBDecrypt\nhave: %x\nwant: %x", DesCFBTests.name, decrypted, DesCFBTests.in)
+		return
+	}
+	t.Logf("%s: DesCFBDecrypt\nhave: %x\nwant: %x", DesCFBTests.name, decrypted, DesCFBTests.in)
+}
+
+//$ go test -bench=BenchmarkDesCFBEncrypt --benchmem --count=3
+//goos: windows
+//goarch: amd64
+//cpu: Intel(R) Core(TM) i5-10400 CPU @ 2.90GHz
+//BenchmarkDesCFBEncrypt-12         533830              2251 ns/op             272 B/op          5 allocs/op
+//BenchmarkDesCFBEncrypt-12         533077              2265 ns/op             272 B/op          5 allocs/op
+//BenchmarkDesCFBEncrypt-12         545481              2252 ns/op             272 B/op          5 allocs/op
+func BenchmarkDesCFBEncrypt(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		_, _ = DesCFBEncrypt(DesCFBTests.in, DesCFBTests.key, DesCFBTests.key)
+	}
+}
+
+//$ go test -bench=BenchmarkDesCFBDecrypt --benchmem --count=3
+//goos: windows
+//goarch: amd64
+//pkg: github.com/junjun-cai/go-tools/crypto
+//BenchmarkDesCFBDecrypt-12         514030              2303 ns/op             272 B/op          5 allocs/op
+//BenchmarkDesCFBDecrypt-12         555462              2244 ns/op             272 B/op          5 allocs/op
+//BenchmarkDesCFBDecrypt-12         544720              2247 ns/op             272 B/op          5 allocs/op
+func BenchmarkDesCFBDecrypt(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		_, _ = DesCFBDecrypt(DesCFBTests.out, DesCFBTests.key, DesCFBTests.key)
+	}
+}
