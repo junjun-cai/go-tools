@@ -274,3 +274,29 @@ func TestDesOFBDecrypt(t *testing.T) {
 	}
 	t.Logf("%s: DesOFBDecrypt\nhave: %x\nwant: %x", DesOFBTests.name, decrypted, DesOFBTests.in)
 }
+
+//$ go test -bench=BenchmarkDesOFBEncrypt --benchmem --count=3
+//goos: windows
+//goarch: amd64
+//cpu: Intel(R) Core(TM) i5-10400 CPU @ 2.90GHz
+//BenchmarkDesOFBEncrypt-12         158990              7598 ns/op             776 B/op          5 allocs/op
+//BenchmarkDesOFBEncrypt-12         159724              7574 ns/op             776 B/op          5 allocs/op
+//BenchmarkDesOFBEncrypt-12         157155              7578 ns/op             776 B/op          5 allocs/op
+func BenchmarkDesOFBEncrypt(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		_, _ = DesOFBEncrypt(DesOFBTests.in, DesOFBTests.key, DesOFBTests.key)
+	}
+}
+
+//$ go test -bench=BenchmarkDesOFBDecrypt --benchmem --count=3
+//goos: windows
+//goarch: amd64
+//cpu: Intel(R) Core(TM) i5-10400 CPU @ 2.90GHz
+//BenchmarkDesOFBDecrypt-12         156746              7571 ns/op             776 B/op          5 allocs/op
+//BenchmarkDesOFBDecrypt-12         158554              7594 ns/op             776 B/op          5 allocs/op
+//BenchmarkDesOFBDecrypt-12         159663              7555 ns/op             776 B/op          5 allocs/op
+func BenchmarkDesOFBDecrypt(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		_, _ = DesOFBDecrypt(DesOFBTests.out, DesOFBTests.key, DesOFBTests.key)
+	}
+}
