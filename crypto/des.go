@@ -110,3 +110,31 @@ func DesCFBDecrypt(encrypted, desKey, iv []byte) ([]byte, error) {
 	}
 	return CFBDecrypt(ciphers, encrypted, iv)
 }
+
+// ***********************************************************************************************
+// * SUMMARY:
+// * WARNING:
+// * HISTORY:
+// *    -create: 2022/12/27 09:39:58 ColeCai.
+// ***********************************************************************************************
+func DesOFBEncrypt(encrypted, desKey, iv []byte) ([]byte, error) {
+	ciphers, err := des.NewCipher(desKey)
+	if err != nil {
+		return nil, err
+	}
+	return OFBCrypto(ciphers, encrypted, iv)
+}
+
+// ***********************************************************************************************
+// * SUMMARY:
+// * WARNING:
+// * HISTORY:
+// *    -create: 2022/12/27 09:40:51 ColeCai.
+// ***********************************************************************************************
+func DesOFBDecrypt(decrypted, desKey, iv []byte) ([]byte, error) {
+	ciphers, err := des.NewCipher(desKey)
+	if err != nil {
+		return nil, err
+	}
+	return OFBCrypto(ciphers, decrypted, iv)
+}
