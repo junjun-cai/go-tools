@@ -13,6 +13,8 @@
 // * 	-DesCBCDecrypt(encrypted, desKey, iv []byte, padding PaddingT) ([]byte, error)
 // * 	-DesECBEncrypt(decrypted, desKey []byte, padding PaddingT) ([]byte, error)
 // * 	-DesECBDecrypt(decrypted, desKey []byte, padding PaddingT) ([]byte, error)
+// * 	-DesCFBEncrypt(decrypted, desKey, iv []byte) ([]byte, error)
+// * 	-DesCFBDecrypt(encrypted, desKey, iv []byte) ([]byte, error)
 // * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 package crypto
