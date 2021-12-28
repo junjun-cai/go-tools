@@ -17,6 +17,8 @@
 // * 	-DesCFBDecrypt(encrypted, desKey, iv []byte) ([]byte, error)
 // * 	-DesOFBEncrypt(decrypted, desKey, iv []byte) ([]byte, error)
 // * 	-DesOFBDecrypt(encrypted, desKey, iv []byte) ([]byte, error)
+// * 	-DesCTREncrypt(decrypted, desKey, iv []byte) ([]byte, error)
+// * 	-DesCTRDecrypt(encrypted, desKey, iv []byte) ([]byte, error)
 // * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 package crypto
@@ -58,7 +60,7 @@ func DesCBCDecrypt(encrypted []byte, desKey, iv []byte, padding PaddingT) ([]byt
 // ***********************************************************************************************
 // * SUMMARY:
 // * WARNING:
-// * 	-deskey length must equal 8. if not DesCBCDecrypt will panic.
+// * 	-deskey length must equal 8. if not DesECBEncrypt will panic.
 // * HISTORY:
 // *    -create: 2021/12/24 10:15:55 ColeCai.
 // ***********************************************************************************************
@@ -73,7 +75,7 @@ func DesECBEncrypt(decrypted, desKey []byte, padding PaddingT) ([]byte, error) {
 // ***********************************************************************************************
 // * SUMMARY:
 // * WARNING:
-// * 	-deskey length must equal 8. if not DesCBCDecrypt will panic.
+// * 	-deskey length must equal 8. if not DesECBDecrypt will panic.
 // * HISTORY:
 // *    -create: 2021/12/24 10:18:16 ColeCai.
 // ***********************************************************************************************
@@ -88,6 +90,7 @@ func DesECBDecrypt(encrypted, desKey []byte, padding PaddingT) ([]byte, error) {
 // ***********************************************************************************************
 // * SUMMARY:
 // * WARNING:
+// * 	-deskey length must equal 8. if not DesCFBEncrypt will panic.
 // * HISTORY:
 // *    -create: 2021/12/25 15:04:28 ColeCai.
 // ***********************************************************************************************
@@ -102,6 +105,7 @@ func DesCFBEncrypt(decrypted, desKey, iv []byte) ([]byte, error) {
 // ***********************************************************************************************
 // * SUMMARY:
 // * WARNING:
+// * 	-deskey length must equal 8. if not DesCFBDecrypt will panic.
 // * HISTORY:
 // *    -create: 2021/12/25 15:05:28 ColeCai.
 // ***********************************************************************************************
@@ -116,6 +120,7 @@ func DesCFBDecrypt(encrypted, desKey, iv []byte) ([]byte, error) {
 // ***********************************************************************************************
 // * SUMMARY:
 // * WARNING:
+// * 	-deskey length must equal 8. if not DesOFBEncrypt will panic.
 // * HISTORY:
 // *    -create: 2022/12/27 09:39:58 ColeCai.
 // ***********************************************************************************************
@@ -130,6 +135,7 @@ func DesOFBEncrypt(decrypted, desKey, iv []byte) ([]byte, error) {
 // ***********************************************************************************************
 // * SUMMARY:
 // * WARNING:
+// * 	-deskey length must equal 8. if not DesOFBDecrypt will panic.
 // * HISTORY:
 // *    -create: 2022/12/27 09:40:51 ColeCai.
 // ***********************************************************************************************
@@ -144,6 +150,7 @@ func DesOFBDecrypt(encrypted, desKey, iv []byte) ([]byte, error) {
 // ***********************************************************************************************
 // * SUMMARY:
 // * WARNING:
+// * 	-deskey length must equal 8. if not DesCTREncrypt will panic.
 // * HISTORY:
 // *    -create: 2022/12/28 11:48:04 ColeCai.
 // ***********************************************************************************************
@@ -158,6 +165,7 @@ func DesCTREncrypt(decrypted, desKey, iv []byte) ([]byte, error) {
 // ***********************************************************************************************
 // * SUMMARY:
 // * WARNING:
+// * 	-deskey length must equal 8. if not DesCTRDecrypt will panic.
 // * HISTORY:
 // *    -create: 2022/12/28 11:48:56 ColeCai.
 // ***********************************************************************************************
