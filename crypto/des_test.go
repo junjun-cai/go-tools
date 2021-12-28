@@ -325,7 +325,6 @@ func TestDesCTREncrypt(t *testing.T) {
 		t.Errorf("%s DesCTREncrypt failed,err:%+v", DesCTRTests.name, err)
 		return
 	}
-	FormatBytes(encrypted)
 	if !bytes.Equal(encrypted, DesCTRTests.out) {
 		t.Errorf("%s: DesCTREncrypt\nhave: %x\nwant: %x", DesCTRTests.name, encrypted, DesCTRTests.out)
 		return
@@ -344,4 +343,30 @@ func TestDesCTRDecrypt(t *testing.T) {
 		return
 	}
 	t.Logf("%s: DesCTRDecrypt\nhave: %x\nwant: %x", DesCTRTests.name, decrypted, DesCTRTests.in)
+}
+
+//$ go test -bench=BenchmarkDesCTREncrypt --benchmem --count=3
+//goos: windows
+//goarch: amd64
+//cpu: Intel(R) Core(TM) i5-10400 CPU @ 2.90GHz
+//BenchmarkDesCTREncrypt-12         149662              7930 ns/op             776 B/op          5 allocs/op
+//BenchmarkDesCTREncrypt-12         151119              7913 ns/op             776 B/op          5 allocs/op
+//BenchmarkDesCTREncrypt-12         151656              8076 ns/op             776 B/op          5 allocs/op
+func BenchmarkDesCTREncrypt(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		_, _ = DesCTREncrypt(DesCTRTests.in, DesCTRTests.key, DesCTRTests.key)
+	}
+}
+
+//$ go test -bench=BenchmarkDesCTRDecrypt --benchmem --count=3
+//goos: windows
+//goarch: amd64
+//cpu: Intel(R) Core(TM) i5-10400 CPU @ 2.90GHz
+//BenchmarkDesCTRDecrypt-12         148777              8111 ns/op             776 B/op          5 allocs/op
+//BenchmarkDesCTRDecrypt-12         147061              7917 ns/op             776 B/op          5 allocs/op
+//BenchmarkDesCTRDecrypt-12         152420              7933 ns/op             776 B/op          5 allocs/op
+func BenchmarkDesCTRDecrypt(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		_, _ = DesCTRDecrypt(DesCTRTests.out, DesCTRTests.key, DesCTRTests.key)
+	}
 }
