@@ -300,3 +300,48 @@ func BenchmarkDesOFBDecrypt(b *testing.B) {
 		_, _ = DesOFBDecrypt(DesOFBTests.out, DesOFBTests.key, DesOFBTests.key)
 	}
 }
+
+var DesCTRTests = struct {
+	name string
+	key  []byte
+	in   []byte
+	out  []byte
+	pad  PaddingT
+}{
+	"CTR-DES8",
+	DesKey8,
+	[]byte("this is des ctr mode encrypt, aes key is 64 bits"),
+	[]byte{
+		0x73, 0x44, 0xaa, 0x1c, 0x64, 0x5c, 0x18, 0x39, 0xe1, 0x5b, 0xa9, 0xf9, 0x6e, 0x20,
+		0x31, 0x11, 0xe1, 0xdc, 0x40, 0x3f, 0xca, 0x83, 0x73, 0x23, 0xbf, 0x5a, 0x0a, 0x6f,
+		0x25, 0x89, 0x34, 0x8d, 0x9d, 0xbb, 0xc1, 0xd9, 0xff, 0xc2, 0x38, 0x67, 0x13, 0x4d,
+		0xfe, 0xca, 0x4d, 0xa8, 0x75, 0x36},
+	PKCS7_PADDING,
+}
+
+func TestDesCTREncrypt(t *testing.T) {
+	encrypted, err := DesCTREncrypt(DesCTRTests.in, DesCTRTests.key, DesCTRTests.key)
+	if err != nil {
+		t.Errorf("%s DesCTREncrypt failed,err:%+v", DesCTRTests.name, err)
+		return
+	}
+	FormatBytes(encrypted)
+	if !bytes.Equal(encrypted, DesCTRTests.out) {
+		t.Errorf("%s: DesCTREncrypt\nhave: %x\nwant: %x", DesCTRTests.name, encrypted, DesCTRTests.out)
+		return
+	}
+	t.Logf("%s: DesCTREncrypt\nhave: %x\nwant: %x", DesCTRTests.name, encrypted, DesCTRTests.out)
+}
+
+func TestDesCTRDecrypt(t *testing.T) {
+	decrypted, err := DesCTRDecrypt(DesCTRTests.out, DesCTRTests.key, DesCTRTests.key)
+	if err != nil {
+		t.Errorf("%s DesCTRDecrypt failed,err:%+v", DesCTRTests.name, err)
+		return
+	}
+	if !bytes.Equal(decrypted, DesCTRTests.in) {
+		t.Errorf("%s: DesCTRDecrypt\nhave: %x\nwant: %x", DesCTRTests.name, decrypted, DesCTRTests.in)
+		return
+	}
+	t.Logf("%s: DesCTRDecrypt\nhave: %x\nwant: %x", DesCTRTests.name, decrypted, DesCTRTests.in)
+}
