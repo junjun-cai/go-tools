@@ -15,7 +15,7 @@
 // * 	-DesECBDecrypt(decrypted, desKey []byte, padding PaddingT) ([]byte, error)
 // * 	-DesCFBEncrypt(decrypted, desKey, iv []byte) ([]byte, error)
 // * 	-DesCFBDecrypt(encrypted, desKey, iv []byte) ([]byte, error)
-// * 	-DesOFBEncrypt(encrypted, desKey, iv []byte) ([]byte, error)
+// * 	-DesOFBEncrypt(decrypted, desKey, iv []byte) ([]byte, error)
 // * 	-DesOFBDecrypt(encrypted, desKey, iv []byte) ([]byte, error)
 // * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -119,7 +119,21 @@ func DesCFBDecrypt(encrypted, desKey, iv []byte) ([]byte, error) {
 // * HISTORY:
 // *    -create: 2022/12/27 09:39:58 ColeCai.
 // ***********************************************************************************************
-func DesOFBEncrypt(encrypted, desKey, iv []byte) ([]byte, error) {
+func DesOFBEncrypt(decrypted, desKey, iv []byte) ([]byte, error) {
+	ciphers, err := des.NewCipher(desKey)
+	if err != nil {
+		return nil, err
+	}
+	return OFBCrypto(ciphers, decrypted, iv)
+}
+
+// ***********************************************************************************************
+// * SUMMARY:
+// * WARNING:
+// * HISTORY:
+// *    -create: 2022/12/27 09:40:51 ColeCai.
+// ***********************************************************************************************
+func DesOFBDecrypt(encrypted, desKey, iv []byte) ([]byte, error) {
 	ciphers, err := des.NewCipher(desKey)
 	if err != nil {
 		return nil, err
@@ -131,12 +145,26 @@ func DesOFBEncrypt(encrypted, desKey, iv []byte) ([]byte, error) {
 // * SUMMARY:
 // * WARNING:
 // * HISTORY:
-// *    -create: 2022/12/27 09:40:51 ColeCai.
+// *    -create: 2022/12/28 11:48:04 ColeCai.
 // ***********************************************************************************************
-func DesOFBDecrypt(decrypted, desKey, iv []byte) ([]byte, error) {
+func DesCTREncrypt(decrypted, desKey, iv []byte) ([]byte, error) {
 	ciphers, err := des.NewCipher(desKey)
 	if err != nil {
 		return nil, err
 	}
-	return OFBCrypto(ciphers, decrypted, iv)
+	return CTRCrypto(ciphers, decrypted, iv)
+}
+
+// ***********************************************************************************************
+// * SUMMARY:
+// * WARNING:
+// * HISTORY:
+// *    -create: 2022/12/28 11:48:56 ColeCai.
+// ***********************************************************************************************
+func DesCTRDecrypt(encrypted, desKey, iv []byte) ([]byte, error) {
+	ciphers, err := des.NewCipher(desKey)
+	if err != nil {
+		return nil, err
+	}
+	return CTRCrypto(ciphers, encrypted, iv)
 }
