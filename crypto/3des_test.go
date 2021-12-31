@@ -36,7 +36,7 @@ var Des3CBCTests = struct {
 	out  []byte
 	pad  PaddingT
 }{
-	"CBC-DES24",
+	"CBC-3DES24",
 	Des3Key24,
 	Des3IV8,
 	[]byte("this is 3des cbc mode encrypt, 3des key is 192 bits"),
@@ -71,5 +71,31 @@ func TestDes3CBCDecrypt(t *testing.T) {
 		t.Errorf("%s: Des3CBCDecrypt\nhave: %x\nwant: %x", Des3CBCTests.name, decrypted, Des3CBCTests.in)
 		return
 	}
-	t.Logf("%s: Des3CBCDecrypt\nhave: %s\nwant: %s", DesCBCTests.name, decrypted, Des3CBCTests.in)
+	t.Logf("%s: Des3CBCDecrypt\nhave: %s\nwant: %s", Des3CBCTests.name, decrypted, Des3CBCTests.in)
+}
+
+//$ go test -bench=BenchmarkDes3CBCEncrypt --benchmem --count=3
+//goos: windows
+//goarch: amd64
+//cpu: Intel(R) Core(TM) i5-10400 CPU @ 2.90GHz
+//BenchmarkDes3CBCEncrypt-12        182310              6504 ns/op             664 B/op          7 allocs/op
+//BenchmarkDes3CBCEncrypt-12        176114              6523 ns/op             664 B/op          7 allocs/op
+//BenchmarkDes3CBCEncrypt-12        186967              6488 ns/op             664 B/op          7 allocs/op
+func BenchmarkDes3CBCEncrypt(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		_, _ = Des3CBCEncrypt(Des3CBCTests.in, Des3CBCTests.key, Des3CBCTests.iv, Des3CBCTests.pad)
+	}
+}
+
+//$ go test -bench=BenchmarkDes3CBCDecrypt --benchmem --count=3
+//goos: windows
+//goarch: amd64
+//cpu: Intel(R) Core(TM) i5-10400 CPU @ 2.90GHz
+//BenchmarkDes3CBCDecrypt-12        185245              6352 ns/op             544 B/op          5 allocs/op
+//BenchmarkDes3CBCDecrypt-12        189756              6354 ns/op             544 B/op          5 allocs/op
+//BenchmarkDes3CBCDecrypt-12        188100              6400 ns/op             544 B/op          5 allocs/op
+func BenchmarkDes3CBCDecrypt(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		_, _ = Des3CBCDecrypt(Des3CBCTests.out, Des3CBCTests.key, Des3CBCTests.iv, Des3CBCTests.pad)
+	}
 }
