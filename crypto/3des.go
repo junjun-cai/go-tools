@@ -11,6 +11,8 @@
 // * Functions:
 // * 	-DesCBCEncrypt(decrypted, desKey, iv []byte, padding PaddingT) ([]byte, error)
 // * 	-DesCBCDecrypt(encrypted, desKey, iv []byte, padding PaddingT) ([]byte, error)
+// * 	-Des3ECBEncrypt(decrypted, desKey []byte, padding PaddingT) ([]byte, error)
+// * 	-Des3ECBDecrypt(encrypted, desKey []byte, padding PaddingT) ([]byte, error)
 // * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 package crypto
@@ -50,6 +52,7 @@ func Des3CBCDecrypt(encrypted, desKey, iv []byte, padding PaddingT) ([]byte, err
 // ***********************************************************************************************
 // * SUMMARY:
 // * WARNING:
+// * 	-deskey must 24 bytes, iv must 8 bytes.
 // * HISTORY:
 // *    -create: 2022/01/04 10:20:50 ColeCai.
 // ***********************************************************************************************
@@ -64,6 +67,7 @@ func Des3ECBEncrypt(decrypted, desKey []byte, padding PaddingT) ([]byte, error) 
 // ***********************************************************************************************
 // * SUMMARY:
 // * WARNING:
+// * 	-deskey must 24 bytes, iv must 8 bytes.
 // * HISTORY:
 // *    -create: 2022/01/04 10:22:47 ColeCai.
 // ***********************************************************************************************
