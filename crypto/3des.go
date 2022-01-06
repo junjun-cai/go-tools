@@ -99,7 +99,7 @@ func Des3CFBEncrypt(decrypted, desKey, iv []byte) ([]byte, error) {
 // * HISTORY:
 // *    -create: 2022/01/06 15:21:27 ColeCai.
 // ***********************************************************************************************
-func DES3CFBDecrypt(encrypted, desKey, iv []byte) ([]byte, error) {
+func Des3CFBDecrypt(encrypted, desKey, iv []byte) ([]byte, error) {
 	ciphers, err := des.NewTripleDESCipher(desKey)
 	if err != nil {
 		return nil, err
