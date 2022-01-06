@@ -217,3 +217,29 @@ func TestDes3CFBDecrypt(t *testing.T) {
 	}
 	t.Logf("%s: Des3CFBDecrypt\nhave: %s\nwant: %s", Des3CFBTests.name, decrypted, Des3CFBTests.in)
 }
+
+//$ go test -bench=BenchmarkDes3CFBEncrypt --benchmem --count=3
+//goos: windows
+//goarch: amd64
+//cpu: Intel(R) Core(TM) i5-10400 CPU @ 2.90GHz
+//BenchmarkDes3CFBEncrypt-12        188080              6374 ns/op             544 B/op          5 allocs/op
+//BenchmarkDes3CFBEncrypt-12        181546              6317 ns/op             544 B/op          5 allocs/op
+//BenchmarkDes3CFBEncrypt-12        192056              6300 ns/op             544 B/op          5 allocs/op
+func BenchmarkDes3CFBEncrypt(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		_, _ = Des3CFBEncrypt(Des3CFBTests.in, Des3CFBTests.key, Des3ECBTests.iv)
+	}
+}
+
+//$ go test -bench=BenchmarkDes3CFBDecrypt --benchmem --count=3
+//goos: windows
+//goarch: amd64
+//cpu: Intel(R) Core(TM) i5-10400 CPU @ 2.90GHz
+//BenchmarkDes3CFBDecrypt-12        185288              6438 ns/op             544 B/op          5 allocs/op
+//BenchmarkDes3CFBDecrypt-12        190471              6319 ns/op             544 B/op          5 allocs/op
+//BenchmarkDes3CFBDecrypt-12        188878              6321 ns/op             544 B/op          5 allocs/op
+func BenchmarkDes3CFBDecrypt(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		_, _ = Des3CFBDecrypt(Des3ECBTests.out, Des3ECBTests.key, Des3CFBTests.iv)
+	}
+}
