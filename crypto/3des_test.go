@@ -243,3 +243,49 @@ func BenchmarkDes3CFBDecrypt(b *testing.B) {
 		_, _ = Des3CFBDecrypt(Des3ECBTests.out, Des3ECBTests.key, Des3CFBTests.iv)
 	}
 }
+
+var Des3OFBTests = struct {
+	name string
+	key  []byte
+	iv   []byte
+	in   []byte
+	out  []byte
+	pad  PaddingT
+}{
+	"OFB-3DES24",
+	Des3Key24,
+	Des3IV8,
+	[]byte("this is 3des ofb mode encrypt, 3des key is 192 bits"),
+	[]byte{
+		0x82, 0xe2, 0xd4, 0x59, 0x1c, 0xf8, 0xee, 0x6e, 0x20, 0x16, 0x96, 0x1d, 0x5b, 0xcd,
+		0xf0, 0x41, 0x7b, 0xab, 0x53, 0x3a, 0xeb, 0xaf, 0xd8, 0x7e, 0x77, 0xbb, 0xd6, 0xf8,
+		0x1f, 0x37, 0x58, 0xbf, 0x61, 0x7b, 0x2a, 0x70, 0x6f, 0x82, 0xcb, 0x71, 0x3f, 0x56,
+		0x55, 0xb6, 0x47, 0xa8, 0xe6, 0x13, 0x50, 0x56, 0x17},
+	PKCS7_PADDING,
+}
+
+func TestDes3OFBEncrypt(t *testing.T) {
+	encrypted, err := Des3OFBEncrypt(Des3OFBTests.in, Des3OFBTests.key, Des3OFBTests.iv)
+	if err != nil {
+		t.Errorf("%s Des3OFBEncrypt failed,err:%+v", Des3OFBTests.name, err)
+		return
+	}
+	if !bytes.Equal(encrypted, Des3OFBTests.out) {
+		t.Errorf("%s: Des3OFBEncrypt\nhave: %x\nwant: %x", Des3OFBTests.name, encrypted, Des3OFBTests.out)
+		return
+	}
+	t.Logf("%s: Des3OFBEncrypt\nhave: %x\nwant: %x", Des3OFBTests.name, encrypted, Des3OFBTests.out)
+}
+
+func TestDes3OFBDecrypt(t *testing.T) {
+	decrypted, err := Des3OFBDecrypt(Des3OFBTests.out, Des3OFBTests.key, Des3OFBTests.iv)
+	if err != nil {
+		t.Errorf("%s Des3OFBDecrypt failed,err:%+v", Des3OFBTests.name, err)
+		return
+	}
+	if !bytes.Equal(decrypted, Des3OFBTests.in) {
+		t.Errorf("%s: Des3OFBDecrypt\nhave: %x\nwant: %x", Des3OFBTests.name, decrypted, Des3OFBTests.in)
+		return
+	}
+	t.Logf("%s: Des3OFBDecrypt\nhave: %s\nwant: %s", Des3OFBTests.name, decrypted, Des3OFBTests.in)
+}
