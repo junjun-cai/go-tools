@@ -9,10 +9,16 @@
 // * Ides: GoLand
 // *----------------------------------------------------------------------------------------------
 // * Functions:
-// * 	-DesCBCEncrypt(decrypted, desKey, iv []byte, padding PaddingT) ([]byte, error)
-// * 	-DesCBCDecrypt(encrypted, desKey, iv []byte, padding PaddingT) ([]byte, error)
+// * 	-Des3CBCEncrypt(decrypted, desKey, iv []byte, padding PaddingT) ([]byte, error)
+// * 	-Des3CBCDecrypt(encrypted, desKey, iv []byte, padding PaddingT) ([]byte, error)
 // * 	-Des3ECBEncrypt(decrypted, desKey []byte, padding PaddingT) ([]byte, error)
 // * 	-Des3ECBDecrypt(encrypted, desKey []byte, padding PaddingT) ([]byte, error)
+// * 	-Des3CFBEncrypt(decrypted, desKey, iv []byte) ([]byte, error)
+// * 	-Des3CFBDecrypt(encrypted, desKey, iv []byte) ([]byte, error)
+// * 	-Des3OFBEncrypt(decrypted, desKey, iv []byte) ([]byte, error)
+// * 	-Des3OFBDecrypt(encrypted, desKey, iv []byte) ([]byte, error)
+// * 	-Des3CTREncrypt(decrypted, desKey, iv []byte) ([]byte, error)
+// * 	-Des3CTRDecrypt(encrypted, desKey, iv []byte) ([]byte, error)
 // * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 package crypto
