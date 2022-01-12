@@ -136,3 +136,31 @@ func Des3OFBDecrypt(encrypted, desKey, iv []byte) ([]byte, error) {
 	}
 	return OFBCrypto(ciphers, encrypted, iv)
 }
+
+// ***********************************************************************************************
+// * SUMMARY:
+// * WARNING:
+// * HISTORY:
+// *    -create: 2022/01/12 09:52:15 ColeCai.
+// ***********************************************************************************************
+func Des3CTREncrypt(decrypted, desKey, iv []byte) ([]byte, error) {
+	ciphers, err := des.NewTripleDESCipher(desKey)
+	if err != nil {
+		return nil, err
+	}
+	return CTRCrypto(ciphers, decrypted, iv)
+}
+
+// ***********************************************************************************************
+// * SUMMARY:
+// * WARNING:
+// * HISTORY:
+// *    -create: 2022/01/12 09:53:04 ColeCai.
+// ***********************************************************************************************
+func Des3CTRDecrypt(encrypted, desKey, iv []byte) ([]byte, error) {
+	ciphers, err := des.NewTripleDESCipher(desKey)
+	if err != nil {
+		return nil, err
+	}
+	return CTRCrypto(ciphers, encrypted, iv)
+}
