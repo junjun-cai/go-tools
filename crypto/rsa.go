@@ -2,8 +2,8 @@
 // ***                               G O L A N D   S T U D I O S                               ***
 // ***********************************************************************************************
 // * Auth: ColeCai
-// * Date: 2021/1/17 10:05:45
-// * File: aes.go
+// * Date: 2021/01/17 10:05:45
+// * File: rsa.go
 // * Proj: go-tools
 // * Pack: crypto
 // * Ides: GoLand
@@ -29,7 +29,7 @@ import (
 // * SUMMARY:
 // * WARNING:
 // * HISTORY:
-// *    -create: 2021/1/17 10:07:01 ColeCai.
+// *    -create: 2021/01/17 10:07:01 ColeCai.
 // ***********************************************************************************************
 func RsaEncrypt(decrypted, puKey []byte) ([]byte, error) {
 	block, _ := pem.Decode(puKey)
@@ -49,7 +49,7 @@ func RsaEncrypt(decrypted, puKey []byte) ([]byte, error) {
 // * SUMMARY:
 // * WARNING:
 // * HISTORY:
-// *    -create: 2021/1/17 10:10:47 ColeCai.
+// *    -create: 2021/01/17 10:10:47 ColeCai.
 // ***********************************************************************************************
 func RsaDecrypt(encrypted, priKey []byte) ([]byte, error) {
 	block, _ := pem.Decode(priKey)
@@ -67,7 +67,7 @@ func RsaDecrypt(encrypted, priKey []byte) ([]byte, error) {
 // * SUMMARY:
 // * WARNING:
 // * HISTORY:
-// *    -create: 2021/1/17 10:14:13 ColeCai.
+// *    -create: 2021/01/17 10:14:13 ColeCai.
 // ***********************************************************************************************
 func GenRsaKey(priWriter, pubWriter io.Writer, bits int) error {
 	priKey, err := rsa.GenerateKey(rand.Reader, bits)
